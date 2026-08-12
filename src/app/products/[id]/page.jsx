@@ -4,6 +4,80 @@ import { FaStar, FaShoppingCart } from "react-icons/fa";
 import { BsLightningChargeFill } from "react-icons/bs";
 import { MdVerified } from "react-icons/md";
 
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+
+  const product = await getSingleProduct(id);
+
+  if (!product || !product.title) {
+    return {
+      title: "Product Not Found",
+      description: "The requested product could not be found.",
+    };
+  }
+
+  const discountedPrice =
+    product.price - (product.price * product.discount) / 100;
+
+  return {
+    title: product.title,
+
+    description:
+      product.description?.slice(0, 160) ||
+      `Buy ${product.title} from Hero Kidz.`,
+
+    keywords: [
+      product.title,
+      product.bangla,
+      "educational toys",
+      "learning toys",
+      "kids toys",
+      "Hero Kidz",
+    ].filter(Boolean),
+
+    alternates: {
+      canonical: `/products/${product._id}`,
+    },
+
+    openGraph: {
+      type: "website",
+      title: `${product.title} | Hero Kidz`,
+      description:
+        product.description?.slice(0, 160) ||
+        `Buy ${product.title} from Hero Kidz.`,
+
+      url: `/products/${product._id}`,
+
+      siteName: "Hero Kidz",
+
+      images: [
+        {
+          url: product.image,
+          width: 1200,
+          height: 1200,
+          alt: product.title,
+        },
+      ],
+    },
+
+    twitter: {
+      card: "summary_large_image",
+      title: `${product.title} | Hero Kidz`,
+      description:
+        product.description?.slice(0, 160) ||
+        `Buy ${product.title} from Hero Kidz.`,
+      images: [product.image],
+    },
+
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
+
+
+
 const ProductDetails = async ({ params }) => {
   const { id } = await params;
 
