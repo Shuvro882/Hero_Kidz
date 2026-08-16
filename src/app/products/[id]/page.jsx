@@ -3,6 +3,7 @@ import Image from "next/image";
 import { FaStar, FaShoppingCart } from "react-icons/fa";
 import { BsLightningChargeFill } from "react-icons/bs";
 import { MdVerified } from "react-icons/md";
+import CartButton from "@/components/buttons/CartButton";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -179,16 +180,17 @@ const ProductDetails = async ({ params }) => {
           </ul>
 
           <div className="mt-8 flex gap-4">
+ 
+              <div className="flex-1">
+                <CartButton product={ product }></CartButton>
 
-            <button className="btn btn-primary flex-1">
-              <FaShoppingCart />
-              Add To Cart
-            </button>
-
-            <button className="btn btn-success flex-1">
+              </div>
+            <div className="flex-1">
+              <button className="btn btn-success w-full">
               <BsLightningChargeFill />
               Buy Now
             </button>
+            </div>
 
           </div>
 

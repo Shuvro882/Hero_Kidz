@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/layouts/Navbar";
 import Footer from "@/components/layouts/Footer";
 import localFont from 'next/font/local'
+import NextAuthProvider from "@/provider/NextAuthProvider";
 
 
 const poppins = Poppins({
@@ -95,6 +96,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+    <NextAuthProvider>
     <html
       lang="en"
     >
@@ -110,5 +112,6 @@ export default function RootLayout({ children }) {
       </footer>
       </body>
     </html>
+    </NextAuthProvider>
   );
 }
