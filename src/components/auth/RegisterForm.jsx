@@ -1,14 +1,18 @@
 "use client";
 
 import { postUser } from "@/actions/server/auth";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const RegisterForm = () => {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false);
+
+  const params = useSearchParams();
+  const callBackUrl = params.get("callbackUrl")|| "/";
 
   const handleRegister = async (e) => {
   e.preventDefault();
@@ -29,8 +33,15 @@ const RegisterForm = () => {
 console.log("result:", result);
 
   if (result?.acknowledged) {
+    
+    // router.push("/login");
+    const result = await signIn("credentials",
+      {email,
+      password,
+      callbackUrl: callBackUrl
+    
+    });
     alert("Successful. Please login");
-    router.push("/login");
   }
 };
 

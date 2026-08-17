@@ -10,33 +10,33 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const router =useRouter();
+  const router = useRouter();
   const params = useSearchParams();
-  const callBack = params.get("callbackUrl")|| "/";
+  const callBackUrl = params.get("callbackUrl") || "/";
 
   const handleLogin = async (e) => {
-    
-  e.preventDefault();
 
-  const form = e.target;
+    e.preventDefault();
 
-  const email = form.email.value;
-  const password = form.password.value;
+    const form = e.target;
 
-  const result = await signIn("credentials", {
-    email,
-    password,
-    // redirect: false,
-    callbackUrl:params.get("callbackUrl") || "/",
-  });
+    const email = form.email.value;
+    const password = form.password.value;
 
-  console.log(result);
-  if(!result.ok){
-    Swal.fire("error","Email password not matched","error")
-  }else{
-    Swal.fire("success","Welcome to Kidz hub","success")
-  }
-};
+    const result = await signIn("credentials", {
+      email,
+      password,
+      // redirect: false,
+      callbackUrl: params.get("callbackUrl") || "/",
+    });
+
+    console.log(result);
+    if (!result.ok) {
+      Swal.fire("error", "Email password not matched", "error")
+    } else {
+      Swal.fire("success", "Welcome to Kidz hub", "success")
+    }
+  };
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4">
@@ -123,7 +123,7 @@ const LoginForm = () => {
             Don't have an account?{" "}
 
             <Link
-              href={`/register?callBackUrl=${callBack}`}
+              href={`/register?callbackUrl=${encodeURIComponent(callBackUrl)}`}
               className="text-primary font-semibold hover:underline"
             >
               Register here
