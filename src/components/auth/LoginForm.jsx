@@ -6,11 +6,13 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import SocialButton from "./SocialButton";
 import { signIn } from "next-auth/react";
 import Swal from "sweetalert2";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const router =useRouter();
+  const params = useSearchParams();
+  const callBack = params.get("callbackUrl")|| "/";
 
   const handleLogin = async (e) => {
     
@@ -24,7 +26,8 @@ const LoginForm = () => {
   const result = await signIn("credentials", {
     email,
     password,
-    redirect: false,
+    // redirect: false,
+    callbackUrl:params.get("callbackUrl") || "/",
   });
 
   console.log(result);
@@ -32,7 +35,6 @@ const LoginForm = () => {
     Swal.fire("error","Email password not matched","error")
   }else{
     Swal.fire("success","Welcome to Kidz hub","success")
-    router.push("/")
   }
 };
 
@@ -121,7 +123,7 @@ const LoginForm = () => {
             Don't have an account?{" "}
 
             <Link
-              href="/register"
+              href={`/register?callBackUrl=${callBack}`}
               className="text-primary font-semibold hover:underline"
             >
               Register here

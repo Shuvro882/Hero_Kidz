@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FaStar, FaShoppingCart } from "react-icons/fa";
+import CartButton from "../buttons/CartButton";
 
 const ProductCard = ({ product, onAddToCart }) => {
   const {
@@ -69,13 +70,7 @@ const ProductCard = ({ product, onAddToCart }) => {
 
         {/* Add to Cart */}
         <div className="card-actions mt-4 flex-col">
-          <button
-            onClick={() => onAddToCart?.(product)}
-            className="btn btn-primary w-full"
-          >
-            <FaShoppingCart />
-            Add to Cart
-          </button>
+          <CartButton product={product} />
 
           <Link
             href={`/products/${product._id}`}
