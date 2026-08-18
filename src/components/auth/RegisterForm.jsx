@@ -6,9 +6,10 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const RegisterForm = () => {
-  const router = useRouter()
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
   const params = useSearchParams();
@@ -38,10 +39,16 @@ console.log("result:", result);
     const result = await signIn("credentials",
       {email,
       password,
+      redirect:false,
       callbackUrl: callBackUrl
     
     });
-    alert("Successful. Please login");
+    if(result.ok){
+      Swal.fire("success", "Registered successfully", "success");
+      router.push(callBackUrl)
+    } else{
+      Swal.fire("error", "sorry", "error")
+    }
   }
 };
 
