@@ -14,6 +14,7 @@ const ProductCard = ({ product, onAddToCart }) => {
     ratings,
     reviews,
     sold,
+    _id
   } = product;
 
   const discountedPrice = price - (price * discount) / 100;
@@ -70,7 +71,7 @@ const ProductCard = ({ product, onAddToCart }) => {
 
         {/* Add to Cart */}
         <div className="card-actions mt-4 flex-col">
-          <CartButton product={product} />
+          <CartButton product={{...product, _id:_id.toString()}} />
 
           <Link
             href={`/products/${product._id}`}
