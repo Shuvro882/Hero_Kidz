@@ -1,22 +1,40 @@
 "use client";
 
-import { deleteItemsFromCart } from "@/actions/server/cart";
+import { decreaseItemDb, deleteItemsFromCart, increaseItemDb } from "@/actions/server/cart";
 import Image from "next/image";
 import { useState } from "react";
 import { FaMinus, FaPlus, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
 
-const CartItem = ({ cartItem }) => {
-  const [quantity, setQuantity] = useState(cartItem.quantity);
+const CartItem = ({ cartItem, removeItem, updatedQuantity }) => {
+  // const [quantity, setQuantity] = useState(cartItem.quantity);
 
-  const handleIncrease = () => {
-    setQuantity((prev) => prev + 1);
+  const {quantity, _id} = cartItem;
+   
+  const [loading,setLoading] = useState(false);
+
+
+  const onIncrease = async() => {
+    setLoading(true);
+    const result = await increaseItemDb(_id, quantity)
+
+    if(result.success){
+      Swal.fire("success","quantity increased", "success")
+      updatedQuantity(_id, quantity+1)
+    }
+    setLoading(false);
   };
 
-  const handleDecrease = () => {
-    if (quantity > 1) {
-      setQuantity((prev) => prev - 1);
+  const onDecrease = async() => {
+    setLoading(true);
+    const result = await decreaseItemDb(_id, quantity)
+
+    if(result.success){
+      Swal.fire("success","quantity decreased", "success")
+      updatedQuantity(_id, quantity -1)
+
     }
+    setLoading(false);
   };
 
   const handleRemove = async() => {
@@ -32,7 +50,11 @@ const CartItem = ({ cartItem }) => {
   if (result.isConfirmed) {
 
     const result = await deleteItemsFromCart(cartItem._id)
+    
+
   if(result.success){
+    removeItem(cartItem._id);
+
     Swal.fire({
     title: "Deleted!",
     text: "Your file has been deleted.",
@@ -83,8 +105,8 @@ const CartItem = ({ cartItem }) => {
           {/* Quantity */}
           <div className="join border">
             <button
-              onClick={handleDecrease}
-              disabled={quantity <= 1}
+              onClick={onDecrease}
+              disabled={quantity === 1 || loading}
               className="btn btn-sm join-item"
             >
               <FaMinus size={11} />
@@ -95,7 +117,8 @@ const CartItem = ({ cartItem }) => {
             </span>
 
             <button
-              onClick={handleIncrease}
+              onClick={onIncrease}
+              disabled={quantity === 10 || loading}
               className="btn btn-sm join-item"
             >
               <FaPlus size={11} />
