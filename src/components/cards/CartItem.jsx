@@ -38,6 +38,7 @@ const CartItem = ({ cartItem, removeItem, updatedQuantity }) => {
   };
 
   const handleRemove = async() => {
+    setLoading(true);
     Swal.fire({
   title: "Are you sure?",
   text: "You won't be able to revert this!",
@@ -68,6 +69,7 @@ const CartItem = ({ cartItem, removeItem, updatedQuantity }) => {
   });
   }   
   }
+  setLoading(false)
 });
   };
 

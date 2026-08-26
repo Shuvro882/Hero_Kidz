@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState } from "react";
 import CartItem from "../cards/CartItem";
+import Link from "next/link";
 
 const ClientCart = ({ cartItems = [] }) => {
   const [items, setItems] = useState(cartItems);
@@ -139,9 +140,11 @@ const ClientCart = ({ cartItems = [] }) => {
               </div>
 
               {/* Confirm Button */}
-              <button className="btn btn-primary w-full mt-5">
+              <Link
+              href={"/checkout"}
+              className="btn btn-primary w-full mt-5">
                 Confirm Order
-              </button>
+              </Link>
 
             </div>
           </div>
