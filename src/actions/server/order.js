@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth";
 import { clearCart, getCart } from "./cart";
 import { sendEmail } from "@/lib/sendEmail";
 import { orderInvoiceTemplate } from "@/lib/orderInvoice";
+import { ObjectId } from "mongodb";
 
 const orderCollection = dbConnect(collections.ORDER);
 
@@ -17,6 +18,12 @@ export const createOrder=async(payload)=>{
     if(cart.length == 0){
         return{success: false};
     }
+
+    // const products=cart.map((item)=>({
+    //     _id: new ObjectId(cart.productId),
+    //     quantity:cart.quantity,
+    // }));
+
     
 
     const newOrder={
@@ -26,6 +33,8 @@ export const createOrder=async(payload)=>{
     };
 
     const result = await orderCollection.insertOne(newOrder)
+    
+    
     if(Boolean(result.insertedId)){
         const result = await clearCart();
     }

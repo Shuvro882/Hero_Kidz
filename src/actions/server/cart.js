@@ -9,14 +9,14 @@ import { cache } from "react";
 
 const cartCollections=dbConnect(collections.CART);
 
-export const handleCart = async({product, inc=true})=>{
+export const handleCart = async( productId )=>{
   const {user} = (await getServerSession(authOptions)) || {};
   console.log(user);
   if(!user)
     return{success:false}
 
   //getCartItem- user.email && productId
- const query = {email: user?.email, productId:product?._id};
+ const query = {email: user?.email, productId};
 
  const isAdded = await cartCollections.findOne(query);
 
@@ -25,13 +25,16 @@ export const handleCart = async({product, inc=true})=>{
 
   const updatedData = {
     $inc: {
-      quantity: inc? 1 : -1,
+      quantity: 1,
     },
   }
   
   const result = await cartCollections.updateOne(query, updatedData);
   return {success: Boolean(result.modifiedCount) };
  }else{
+  const product = await dbConnect(collections.PRODUCTS).findOne({
+    _id:new ObjectId(productId),
+  })
 //Not Exist: insert Cart
   const newData = {
     productId: product?._id,
@@ -45,12 +48,7 @@ export const handleCart = async({product, inc=true})=>{
 
   const result = await cartCollections.insertOne(newData);
   return { success: result.acknowledged};
-
-
- }
-
-  
-  
+ } 
 };
 
 export const getCart= cache(async()=>{
@@ -71,7 +69,7 @@ export const deleteItemsFromCart = async(id)=>{
     return {success: false};
   }
 
-  const query ={_id: new ObjectId(id)};
+  const query ={_id: new ObjectId(id), email:user?.email};
 
   const result=await cartCollections.deleteOne(query);
  
@@ -94,7 +92,7 @@ export const decreaseItemDb = async (id, quantity)=>{
   };
 
 
-  const query ={_id: new ObjectId(id)};
+   const query ={_id: new ObjectId(id), email:user?.email};
 
 
   const updatedData = {
@@ -117,7 +115,7 @@ export const increaseItemDb = async (id, quantity)=>{
   };
 
 
-  const query ={_id: new ObjectId(id)};
+    const query ={_id: new ObjectId(id), email:user?.email};
 
 
   const updatedData = {
@@ -127,7 +125,7 @@ export const increaseItemDb = async (id, quantity)=>{
   }
 
 
-  const result=await cartCollections.updateOne(query, updatedData);
+  const result= await cartCollections.updateOne(query, updatedData);
 
   return {success: Boolean(result.modifiedCount)};
 }
